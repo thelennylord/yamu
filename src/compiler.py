@@ -1,7 +1,7 @@
 from .tokenizer import tokenize
 import os
 
-class Parser:
+class Compiler:
     def __init__(self, file, input_path, output_path, *, debug=False) -> None:
         self.file = file
         self.input_path = input_path
@@ -25,7 +25,7 @@ class Parser:
         if not self.debug and not self.output_path.exists():
             os.makedirs(self.output_path, exist_ok=True)
 
-    def parse(self):
+    def compile(self):
         output = []
         with open(self.file, "r") as f:
             contents = [line.rstrip() for line in f if line.rstrip()]

@@ -1,6 +1,6 @@
-from .SimpleCommand import SimpleCommand
+from .base_token import BaseToken
 
-class IndentationCommand(SimpleCommand):
+class IndentationToken(BaseToken):
     def __init__(self, command, parent=None) -> None:
         super().__init__(command, parent)
         self.children = []

@@ -1,4 +1,4 @@
-class SimpleCommand:
+class BaseToken:
     def __init__(self, command, parent=None) -> None:
         self.command = command
         self.parent = parent
@@ -10,7 +10,4 @@ class SimpleCommand:
         return self.parent
 
     def get_type(self) -> str:
-        return "simple"
-
-    def __repr__(self) -> str:
-        return f"<{self.get_type()}>"
+        raise NotImplementedError

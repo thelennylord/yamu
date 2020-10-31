@@ -9,7 +9,7 @@ import time
 import argparse
 from pathlib import Path
 
-from src.parser import Parser
+from src.compiler import Compiler
 
 def main():
     argv = sys.argv[1:]
@@ -44,8 +44,8 @@ def main():
     shutil.copytree(input_path, output_path, ignore=shutil.ignore_patterns("*.mcfunctionx"))
 
     for file in input_path.joinpath("data").glob("**/*.mcfunctionx"):
-        fc = Parser(file, input_path, output_path)
-        fc.parse()
+        compiler = Compiler(file, input_path, output_path)
+        compiler.compile()
     
     print(f"Done! Took {(time.process_time() - start_time)*1000}ms to complete.")
 

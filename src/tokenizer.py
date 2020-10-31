@@ -1,5 +1,5 @@
-from .tokens.SimpleCommand import SimpleCommand
-from .tokens.IndentationCommand import IndentationCommand
+from .tokens.literal_token import LiteralToken
+from .tokens.indentation_token import IndentationToken
 
 
 def calculate_indent(s):
@@ -34,7 +34,7 @@ def tokenize(commands):
             if indent == level:
                 # TODO: Validate execute...run using brigadier
                 if command[:8] == "execute " and command[-4:] == " run":
-                    current_node.append(IndentationCommand(command, current_node))
+                    current_node.append(IndentationToken(command, current_node))
                     level += 1
                     current_node = current_node.get_children()[-1]
                     continue
@@ -46,7 +46,7 @@ def tokenize(commands):
                 
                 # TODO: Validate execute...run using brigadier
                 if command[:8] == "execute " and command[-4:] == " run":
-                    current_node.append(IndentationCommand(command, current_node))
+                    current_node.append(IndentationToken(command, current_node))
                     level += 1
                     current_node = current_node.get_children()[-1]
                     continue
@@ -58,7 +58,7 @@ def tokenize(commands):
 
         if command[:8] == "execute ":
             if command[-4:] == " run":
-                current_node.append(IndentationCommand(command))
+                current_node.append(IndentationToken(command))
                 level += 1
                 current_node = current_node[-1]
                 continue
@@ -69,7 +69,7 @@ def tokenize(commands):
         # TODO: Implement all vanilla commands into brigadier
         if command.split(" ")[0] in DEFAULT_COMMANDS:
             parent = current_node if indent else None
-            current_node.append(SimpleCommand(command, parent))
+            current_node.append(LiteralToken(command, parent))
         elif command == "redo":
             if not indent:
                 raise ValueError("Command 'redo' must be indented in an execute command")
