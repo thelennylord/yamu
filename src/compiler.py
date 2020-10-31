@@ -37,7 +37,7 @@ class Compiler:
                 raise
 
             for node in parsed_commands:
-                if node.get_type() == "simple":
+                if node.get_type() == "literal":
                     output.append(node.command)
                 elif node.get_type() == "intented":
                     output.append(self.paginate_file(node))
@@ -55,7 +55,7 @@ class Compiler:
         name = f"{self.file_name}_ln{self.lambda_count:03d}"
         self.lambda_count += 1
         for child in node.get_children():
-            if child.get_type() == "simple":
+            if child.get_type() == "literal":
                 res.append(child.command)
             elif child.get_type() == "intented":
                 res.append(self.paginate_file(child))
