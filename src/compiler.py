@@ -28,7 +28,7 @@ class Compiler:
     def compile(self):
         output = []
         with open(self.file, "r") as f:
-            contents = [line.rstrip() for line in f if line.rstrip()]
+            contents = [(i, line.rstrip()) for i, line in enumerate(f, 1) if line.rstrip()]
             parsed_commands = None
             try:
                 parsed_commands = tokenize(contents)
@@ -59,6 +59,8 @@ class Compiler:
                 res.append(child.command)
             elif child.get_type() == "intented":
                 res.append(self.paginate_file(child))
+            elif child.get_type() == "redirect":
+                res.append(child.command + f" function {self.minecraft_path}{self.file_name}_ln{child.get_ln():03d}")
         
         if node.should_redo():
             res.append(f"{node.get_redo_condition()}{node.command} function {self.minecraft_path}{name}")
