@@ -5,6 +5,7 @@ Improves the experience coding in Minecraft's mcfunction (Java edition only).<br
 # Features (currently)
 - Introduces indentation for execute commands.
 - Introduces the `redo` command for execute commands.
+- Allows execute commands to be labelled to change control flow.
 
 # Features (planned)
 - [ ] Syntax checks for commands
@@ -35,6 +36,8 @@ yamu -h
 yamu files needs to be prefixed with `.mcfunctionx`<br>
 ## Indentation
 yamu allows the use of indentation in execute commands to simplify writing of code. The indentation is akin to Python's. To go in a level of an execute block, the command must have 4 spaces before it.
+
+Input:
 ```mcfunction
 # namespace:foo.mcfunctionx
 
@@ -43,7 +46,8 @@ execute as @a at @s run
     say bar
     say baz
 ```
-After parsing through yamu, the code would look like this:
+
+Output:
 ```mcfunction
 # namespace:foo.mcfunction
 say foo
@@ -57,6 +61,8 @@ say baz
 
 ## Looping in an execute command
 yamu has a special command named `redo`, which helps looping in an execute command easier.
+
+Input:
 ```mcfunction
 # namespace:foo.mcfunctionx
 execute as @a if score @s health matches 0.. run
@@ -69,7 +75,7 @@ execute as @a if score @s coins matches 0.. run
     execute if score @s health matches 0.. run redo
 ```
 
-After parsing through yamu,
+Output:
 ```mcfunction
 # namespace:foo.mcfunction
 execute as @a if score @s health matches 0.. run function namespace:foo_ln000
@@ -85,5 +91,33 @@ execute as @a if score @s health matches 0.. run function namespace:foo_ln000
 say not broke
 execute if score @s health matches 0.. run execute as @a if score @s coins matches 0.. run function namespace:foo_ln001
 ```
+
+## Using labels in redo command
+Labels are used to mark an execute block. Labels are used in one of the arguments of the `redo` command to redo a labelled execute block. Label names must be alphanumerical and can contain underscores (_). However, they cannot begin with a number.
+
+Input:
+```mcfunction
+bar:
+execute if score @s health matches 0.. run
+    execute if score @s coins matches ..0 run
+        say broke
+        redo bar
+```
+
+When you pass a label to the `redo` command, the execute block under the given label gets executed again. In this instance, we passed the label `bar` to the `redo` command. So, the execute block below the label `bar` will be executed again.
+
+Output:
+```mcfunction
+# namespace:foo.mcfunction
+execute if score @s health matches 0.. run function namespace:foo_ln000
+
+# namespace:foo_ln000.mcfunction
+execute if score @s coins matches ..0 run function namespace:foo_ln001
+
+# namespace:foo_ln001.mcfunction
+say broke
+execute if score @s health matches 0.. run function namespace:foo_ln000
+```
+
 ## License
 [MIT](https://github.com/thelennylord/yamu/blob/master/LICENSE)
